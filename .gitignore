@@ -1,0 +1,5 @@
+# 项目排除路径
+/micro-service-auth/target/
+/micro-service-common/target/
+/micro-service-gateway/target/
+/micro-service-login/target/

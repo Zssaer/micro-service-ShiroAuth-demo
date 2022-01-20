@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: micro-service-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true #表明gateway开启服务注册和发现的功能
+          lower-case-service-id: true #是将请求路径上的服务名配置为小写（因为服务注册的时候，注册中心会将服务名转成大写)
+      routes:
+        - id: path_route
+          uri: https://zssaer.cn           # 网关路由到外部地址https://zssaer.cn
+          predicates:
+            - Path=/{segment}       # 输入条件为`服务网关地址/...`进行跳转
+
+        - id: authorize
+          uri: lb://micro-service-login-api  #网关路由到用户服务dubbo-service-consumer
+          predicates:
+            - Path=/login-api/**       # 输入条件为`服务网关地址/service`进行跳转
+          filters:
+            - StripPrefix=1
+
+server:
+  port: 8000

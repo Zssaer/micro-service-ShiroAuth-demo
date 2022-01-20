@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    username: root
+    password: 200428
+    # ?serverTimezone=UTC解决时区的报错
+    url: jdbc:mysql://127.0.0.1/sss?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+
+
