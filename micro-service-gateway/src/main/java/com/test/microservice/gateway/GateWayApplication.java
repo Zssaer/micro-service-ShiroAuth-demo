@@ -26,6 +26,12 @@ public class GateWayApplication {
         AutowiredBean.setApplicationContext(run);
     }
 
+    /**
+     * Spring-GateWay使用的WebFlux架构。
+     * HttpMessage转换器，用于对Feign的请求转换。
+     * @param converters
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean
     public HttpMessageConverters messageConverters(ObjectProvider<HttpMessageConverter<?>> converters) {

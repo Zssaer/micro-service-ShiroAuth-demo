@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 public class GlobalFilterConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalFilterConfig.class);
+    public final static String ATTRIBUTE_IGNORE_AUTH_GLOBAL_FILTER = "@IgnoreAuthFilter";
 
     /**
      * 授权拦截
@@ -29,23 +30,28 @@ public class GlobalFilterConfig {
     @Order(-1)
     public GlobalFilter auth() {
         return (exchange, chain) -> {
-            logger.info("进行授权认证操作...");
-            // 获取请求微服务的请求路径
-            String path = exchange.getRequest().getPath().toString();
-            // 获取请求头部的Token
-            String token = exchange.getRequest().getHeaders().getFirst("token");
-            if (token == null) {
-                token = "";
+            /** 授权放行检查 */
+            if (exchange.getAttribute(ATTRIBUTE_IGNORE_AUTH_GLOBAL_FILTER) != null) {
+                return chain.filter(exchange);
+            } else {
+                logger.info("进行授权认证操作...");
+                // 获取请求微服务的请求路径
+                String path = exchange.getRequest().getPath().toString();
+                // 获取请求头部的Token
+                String token = exchange.getRequest().getHeaders().getFirst("token");
+                if (token == null) {
+                    token = "";
+                }
+                AuthorizeClient authorizeClient = AutowiredBean.getBean(AuthorizeClient.class);
+                /** 进行授权验证操作 */
+                boolean authResult = authorizeClient.isPermitted(path, token);
+                if (!authResult) {
+                    throw new ServiceException("未授权，无法访问！");
+                }
+                return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                    logger.info("授权认证通过");
+                }));
             }
-            AuthorizeClient authorizeClient = AutowiredBean.getBean(AuthorizeClient.class);
-            /** 进行授权验证操作 */
-            boolean authResult = authorizeClient.isPermitted(path, token);
-            if (!authResult) {
-                throw new ServiceException("未授权，无法访问！");
-            }
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                logger.info("授权认证通过");
-            }));
         };
     }
 }

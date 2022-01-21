@@ -10,11 +10,21 @@ spring:
         locator:
           enabled: true #表明gateway开启服务注册和发现的功能
           lower-case-service-id: true #是将请求路径上的服务名配置为小写（因为服务注册的时候，注册中心会将服务名转成大写)
+      globalcors:
+        add-to-simple-url-handler-mapping: true #解决options请求被拦截问题
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+
       routes:
-        - id: path_route
-          uri: https://zssaer.cn           # 网关路由到外部地址https://zssaer.cn
+        - id: login
+          uri: lb://micro-service-login-api  #网关路由到用户服务dubbo-service-consumer
           predicates:
-            - Path=/{segment}       # 输入条件为`服务网关地址/...`进行跳转
+            - Path=/login-api/login       #输入条件为`服务网关地址/service`进行跳转
+          filters:
+            - StripPrefix=1
+            - IgnoreAuthFilter  #跳过授权认证，Filter在IgnoreAuthFilterFactor中命名
 
         - id: authorize
           uri: lb://micro-service-login-api  #网关路由到用户服务dubbo-service-consumer
@@ -22,6 +32,7 @@ spring:
             - Path=/login-api/**       # 输入条件为`服务网关地址/service`进行跳转
           filters:
             - StripPrefix=1
+
 
 server:
   port: 8000

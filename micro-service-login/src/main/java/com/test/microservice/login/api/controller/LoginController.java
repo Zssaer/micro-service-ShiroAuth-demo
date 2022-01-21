@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * @description: TODO
+ * @description: 登录操作Api
  * @author: Zhaotianyi
  * @time: 2021/11/15 16:27
  */
