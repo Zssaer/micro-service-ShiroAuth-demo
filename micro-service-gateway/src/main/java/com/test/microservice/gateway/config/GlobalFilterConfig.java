@@ -30,7 +30,7 @@ public class GlobalFilterConfig {
     @Order(-1)
     public GlobalFilter auth() {
         return (exchange, chain) -> {
-            /** 授权放行检查 */
+            /* 授权放行检查 */
             if (exchange.getAttribute(ATTRIBUTE_IGNORE_AUTH_GLOBAL_FILTER) != null) {
                 return chain.filter(exchange);
             } else {

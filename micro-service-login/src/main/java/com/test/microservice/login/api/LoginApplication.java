@@ -1,21 +1,20 @@
-package com.test.microservice.auth;
+package com.test.microservice.login.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * @description: 授权微服务
+ * @description: TODO
  * @author: Zhaotianyi
- * @time: 2021/11/15 11:53
+ * @time: 2022/1/19 15:10
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
-public class AuthApplication {
+@EnableFeignClients("com.test.microservice.login.api.feign")
+public class LoginApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
+        SpringApplication.run(LoginApplication.class, args);
     }
 }

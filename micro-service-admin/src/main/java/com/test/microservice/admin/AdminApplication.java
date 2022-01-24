@@ -1,21 +1,20 @@
-package com.test.microservice.login.api;
+package com.test.microservice.admin;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @description: TODO
  * @author: Zhaotianyi
- * @time: 2022/1/19 15:10
+ * @time: 2022/1/24 14:51
  */
+@EnableAdminServer
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients("com.test.microservice.login.api.feign")
-public class Application {
+public class AdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(AdminApplication.class, args);
     }
 }

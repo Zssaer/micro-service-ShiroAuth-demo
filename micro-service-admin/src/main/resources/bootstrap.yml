@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: micro-service-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        metadata:
+          user.name: "admin"
+          user.password: "admin"
+  boot:
+    admin:
+      c
+  security:
+    user:
+      name: "admin"
+      password: "admin"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  port: 8088
+
+logging:
+  file:
+    name: /log/admin.log

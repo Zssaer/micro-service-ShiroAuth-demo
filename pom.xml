@@ -21,6 +21,7 @@
         <module>micro-service-auth</module>
         <module>micro-service-common</module>
         <module>micro-service-login</module>
+        <module>micro-service-admin</module>
     </modules>
 
     <properties>
@@ -45,6 +46,8 @@
         <commons-lang3.version>3.6</commons-lang3.version>
         <guava.version>23.0</guava.version>
         <bcprov-jdk15on.version>1.69</bcprov-jdk15on.version>
+        <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
+        <spring-boot-starter-security.version>2.2.6.RELEASE</spring-boot-starter-security.version>
     </properties>
 
     <dependencyManagement>
@@ -74,11 +77,23 @@
                 <artifactId>spring-cloud-starter-gateway</artifactId>
                 <version>${spring-cloud-starter-gateway.version}</version>
             </dependency>
+            <!--spring-boot-admin-->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin.version}</version>
+            </dependency>
             <!--shiro-->
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
                 <version>${shiro.version}</version>
+            </dependency>
+            <!--spring-boot-starter-security-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring-boot-starter-security.version}</version>
             </dependency>
             <!--druid-->
             <dependency>
