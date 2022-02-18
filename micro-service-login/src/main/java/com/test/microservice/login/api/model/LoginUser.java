@@ -55,7 +55,7 @@ public class LoginUser {
      * 用户类型
      */
     @Column(name = "user_type")
-    private Integer userType;
+    private String userType;
 
     /**
      * @return id
@@ -202,7 +202,7 @@ public class LoginUser {
      *
      * @return user_type - 用户类型
      */
-    public Integer getUserType() {
+    public String getUserType() {
         return userType;
     }
 
@@ -211,7 +211,9 @@ public class LoginUser {
      *
      * @param userType 用户类型
      */
-    public void setUserType(Integer userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
+
+
 }

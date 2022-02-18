@@ -1,5 +1,6 @@
 package com.test.microservice.auth.bean;
 
+import com.test.microservice.auth.dto.LoginUserDTO;
 import com.test.microservice.common.bean.User;
 
 /**
@@ -8,14 +9,14 @@ import com.test.microservice.common.bean.User;
  * @time: 2022/1/19 10:47
  */
 public class AuthInfo {
-    private User userDate;
+    private LoginUserDTO userDate;
     private String token;
 
-    public User getUserDate() {
+    public LoginUserDTO getUserDate() {
         return userDate;
     }
 
-    public void setUserDate(User userDate) {
+    public void setUserDate(LoginUserDTO userDate) {
         this.userDate = userDate;
     }
 

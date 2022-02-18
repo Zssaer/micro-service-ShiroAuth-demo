@@ -13,7 +13,7 @@
     <result column="user_status" jdbcType="INTEGER" property="userStatus" />
     <result column="user_phone" jdbcType="CHAR" property="userPhone" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--

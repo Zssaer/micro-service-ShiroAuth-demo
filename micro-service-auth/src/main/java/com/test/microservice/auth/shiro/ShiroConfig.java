@@ -1,5 +1,6 @@
 package com.test.microservice.auth.shiro;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -17,7 +18,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * @description: TODO
+ * @description: Shiro配置
  * @author: Zhaotianyi
  * @time: 2022/1/19 10:58
  */
@@ -32,12 +33,17 @@ public class ShiroConfig {
     private int timeout;//过期时间
     @Value("${spring.redis.password}")
     private String password;//密码
-
     @Bean
     public ShiroRealm ShiroRealm() {
 
         ShiroRealm myShiroRealm = new ShiroRealm();
-        //myShiroRealm.setCredentialsMatcher(credentialsMatcher());
+        //设置realm hash验证
+        HashedCredentialsMatcher credentialsMatcher= new HashedCredentialsMatcher();
+        //使用加密方法
+        credentialsMatcher.setHashAlgorithmName("md5");
+        //散列次数
+        credentialsMatcher.setHashIterations(1024);
+        myShiroRealm.setCredentialsMatcher(credentialsMatcher);
         return myShiroRealm;
     }
 

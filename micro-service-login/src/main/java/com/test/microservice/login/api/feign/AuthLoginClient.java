@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
- * @description: TODO
+ * @description: 远程调用Auth模块Client
  * @author: Zhaotianyi
  * @time: 2022/1/19 11:40
  */
 @FeignClient(value = "micro-service-auth")
 public interface AuthLoginClient {
+    /**
+     * 通过用户名密码进行登录
+     */
     @PostMapping("/login/loginByPwd")
     Result loginPCByPwd(@RequestParam String user_name, @RequestParam String Pwd);
 }

@@ -19,19 +19,12 @@ spring:
 
       routes:
         - id: login
-          uri: lb://micro-service-login-api  #网关路由到用户服务dubbo-service-consumer
+          uri: lb://micro-service-login-api  #网关路由到用户服务micro-service-login-api
           predicates:
             - Path=/login-api/login       #输入条件为`服务网关地址/service`进行跳转
           filters:
             - StripPrefix=1
             - IgnoreAuthFilter  #跳过授权认证，Filter在IgnoreAuthFilterFactor中命名
-
-        - id: authorize
-          uri: lb://micro-service-login-api  #网关路由到用户服务dubbo-service-consumer
-          predicates:
-            - Path=/login-api/**       # 输入条件为`服务网关地址/service`进行跳转
-          filters:
-            - StripPrefix=1
 
 
 server:

@@ -14,4 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LoginClient {
     @GetMapping("/login/selecUserByAccount")
     Result selecUserByAccount(@RequestParam String userName);
+
+    @GetMapping("/login/selecRolesAndPermissions")
+    Result selecRolesAndPermissions(@RequestParam String userName);
 }

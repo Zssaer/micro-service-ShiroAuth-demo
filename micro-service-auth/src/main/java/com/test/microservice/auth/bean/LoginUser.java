@@ -47,7 +47,7 @@ public class LoginUser {
     /**
      * 用户类型
      */
-    private Integer userType;
+    private String userType;
 
     /**
      * @return id
@@ -189,21 +189,11 @@ public class LoginUser {
         this.createTime = createTime;
     }
 
-    /**
-     * 获取用户类型
-     *
-     * @return user_type - 用户类型
-     */
-    public Integer getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    /**
-     * 设置用户类型
-     *
-     * @param userType 用户类型
-     */
-    public void setUserType(Integer userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 

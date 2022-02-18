@@ -1,11 +1,12 @@
 package com.test.microservice.auth.controller;
 
 import com.test.microservice.auth.bean.AuthInfo;
+import com.test.microservice.auth.dto.LoginUserDTO;
 import com.test.microservice.auth.feign.LoginClient;
-import com.test.microservice.common.bean.User;
 import com.test.microservice.common.result.Result;
 import com.test.microservice.common.result.ResultBuilder;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -28,8 +29,9 @@ public class LoginController {
 
     /**
      * 通过用户名密码进行登录
+     *
      * @param user_name 用户名
-     * @param Pwd 密码
+     * @param Pwd       密码
      */
     @PostMapping("/loginByPwd")
     public Result loginPCByPwd(@RequestParam String user_name, @RequestParam String Pwd) {
@@ -39,12 +41,17 @@ public class LoginController {
         // 根据用户信息，组成用户令牌token
         UsernamePasswordToken Token = new UsernamePasswordToken(user_name, Pwd, false);
         // 登录操作
-        subject.login(Token);
+        try {
+            subject.login(Token);
+        } catch (AuthenticationException e) {
+            logger.error(e.getMessage(),e);
+            return ResultBuilder.failResult("登陆失败,请检查用户名和密码是否正确!");
+        }
 
-        User user1 = (User) subject.getPrincipal();
+        LoginUserDTO userDTO = (LoginUserDTO) subject.getPrincipal();
         String token = subject.getSession().getId().toString();
         AuthInfo authInfo = new AuthInfo();
-        authInfo.setUserDate(user1);
+        authInfo.setUserDate(userDTO);
         authInfo.setToken(token);
         return ResultBuilder.successResult(authInfo);
     }
@@ -55,29 +62,30 @@ public class LoginController {
      * @Return
      */
     @RequestMapping("/logout")
-    public Result logout(){
+    public Result logout() {
         SecurityUtils.getSubject().logout();
         return ResultBuilder.successResult();
     }
 
     /**
      * 验证是否授权
+     *
      * @param requestURI
      * @param token
      * @return
      */
     @GetMapping("/isPermitted")
-    public boolean isPermitted(@RequestParam String requestURI,@RequestParam String token){
+    public boolean isPermitted(@RequestParam String requestURI, @RequestParam String token) {
         System.out.println("isPermitted");
-        logger.info("进入授权,访问路径：{}",requestURI);
+        logger.info("进入授权,访问路径：{}", requestURI);
         //方案一，不灵活（对于get请求，不允许在url通过/拼接参数，可以通过?拼接）、不易排查问题
-        boolean permitted =SecurityUtils.getSubject().isPermitted(requestURI);
-        System.out.println("是否授权："+permitted);
+        boolean permitted = SecurityUtils.getSubject().isPermitted(requestURI);
+        System.out.println("是否授权：" + permitted);
         return permitted;
         //方案二，不灵活，且无权限时报的异常无法捕获
 //        subject.checkPermissions(requestURI);
 
-        //方案一，过于灵活
+        //方案三，过于灵活
 //      User parse = (User) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal();
 //        List<String> resources = parse.getResources();
 //        if("admin".equals(parse.getRole_name())){
@@ -101,8 +109,6 @@ public class LoginController {
 //            return flag;
 //        }
     }
-
-
 
 
 }
