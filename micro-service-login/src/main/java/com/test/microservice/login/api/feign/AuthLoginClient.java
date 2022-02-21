@@ -2,6 +2,7 @@ package com.test.microservice.login.api.feign;
 
 import com.test.microservice.common.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,4 +19,11 @@ public interface AuthLoginClient {
      */
     @PostMapping("/login/loginByPwd")
     Result loginPCByPwd(@RequestParam String user_name, @RequestParam String Pwd);
+
+    /**
+     * 获取登录用户信息
+     * 要求用户已经登录
+     */
+    @GetMapping("/login/LoginInfo")
+    Result LoginInfo();
 }

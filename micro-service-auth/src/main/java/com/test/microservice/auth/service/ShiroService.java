@@ -3,11 +3,15 @@ package com.test.microservice.auth.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.test.microservice.auth.bean.LoginUser;
+import com.test.microservice.auth.dto.LoginUserDTO;
 import com.test.microservice.auth.feign.LoginClient;
 import com.test.microservice.common.bean.User;
 import com.test.microservice.common.exception.ServiceException;
 import com.test.microservice.common.result.Result;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,27 +49,24 @@ public class ShiroService {
     }
 
     /**
-     * 获取拥有角色列表
-     * @param userName 用户名
-     * @return
+     * 获取登录信息
+     * @return 用户DTO类
      */
-    public List<String> getRoles(String userName) {
-        Result result = loginClient.selecRolesAndPermissions(userName);
-        HashMap<String, List<String>> data =(HashMap<String, List<String>>) result.getData();
-        List<String> roles = data.get("roles");
-        return roles;
+    public LoginUserDTO getLoginInfo(){
+        Subject subject = SecurityUtils.getSubject();
+        LoginUserDTO userDTO = (LoginUserDTO) subject.getPrincipal();
+        return userDTO;
     }
 
     /**
-     * 获取拥有权限列表
+     * 获取拥有角色列表和权限列表
      * @param userName 用户名
      * @return
      */
-    public List<String> getPermissions(String userName) {
+    public HashMap<String, List<String>> getRolesAndPermissions(String userName) {
         Result result = loginClient.selecRolesAndPermissions(userName);
         HashMap<String, List<String>> data =(HashMap<String, List<String>>) result.getData();
-        List<String> permissions = data.get("permissions");
-        return permissions;
+        return data;
     }
 
 }

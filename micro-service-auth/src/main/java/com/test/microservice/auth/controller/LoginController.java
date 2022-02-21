@@ -3,6 +3,7 @@ package com.test.microservice.auth.controller;
 import com.test.microservice.auth.bean.AuthInfo;
 import com.test.microservice.auth.dto.LoginUserDTO;
 import com.test.microservice.auth.feign.LoginClient;
+import com.test.microservice.auth.service.ShiroService;
 import com.test.microservice.common.result.Result;
 import com.test.microservice.common.result.ResultBuilder;
 import org.apache.shiro.SecurityUtils;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -25,10 +28,14 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     @Autowired
     private LoginClient loginClient;
+    @Resource
+    private ShiroService shiroService;
+
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     /**
      * 通过用户名密码进行登录
+     * 该接口为micro-service-login登录调用
      *
      * @param user_name 用户名
      * @param Pwd       密码
@@ -44,7 +51,7 @@ public class LoginController {
         try {
             subject.login(Token);
         } catch (AuthenticationException e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
             return ResultBuilder.failResult("登陆失败,请检查用户名和密码是否正确!");
         }
 
@@ -57,9 +64,7 @@ public class LoginController {
     }
 
     /**
-     * @Author zty
-     * @Description: 退出登录
-     * @Return
+     * 退出登录
      */
     @RequestMapping("/logout")
     public Result logout() {
@@ -69,17 +74,19 @@ public class LoginController {
 
     /**
      * 验证是否授权
+     * 该接口为GateWay全局过滤器调用
      *
      * @param requestURI
      * @param token
      * @return
      */
     @GetMapping("/isPermitted")
-    public boolean isPermitted(@RequestParam String requestURI, @RequestParam String token) {
-        System.out.println("isPermitted");
-        logger.info("进入授权,访问路径：{}", requestURI);
+    public boolean isPermitted(@RequestParam String requestURI, @RequestParam String httpMethod, @RequestParam String token) {
+        System.out.println("进入授权中...");
+        logger.info("访问请求路径：{}", requestURI);
+        logger.info("访问请求方法：{}", httpMethod);
         //方案一，不灵活（对于get请求，不允许在url通过/拼接参数，可以通过?拼接）、不易排查问题
-        boolean permitted = SecurityUtils.getSubject().isPermitted(requestURI);
+        boolean permitted = SecurityUtils.getSubject().isPermitted(requestURI + ":" + httpMethod);
         System.out.println("是否授权：" + permitted);
         return permitted;
         //方案二，不灵活，且无权限时报的异常无法捕获
@@ -108,6 +115,18 @@ public class LoginController {
 //            }
 //            return flag;
 //        }
+    }
+
+    /**
+     * 获取登录信息
+     * 该接口为micro-service-login获取登录信息调用
+     */
+    @GetMapping("/LoginInfo")
+    public Result LoginInfo() {
+        LoginUserDTO info = shiroService.getLoginInfo();
+        Subject subject = SecurityUtils.getSubject();
+        LoginUserDTO userDTO = (LoginUserDTO) subject.getPrincipal();
+        return ResultBuilder.successResult(userDTO);
     }
 
 

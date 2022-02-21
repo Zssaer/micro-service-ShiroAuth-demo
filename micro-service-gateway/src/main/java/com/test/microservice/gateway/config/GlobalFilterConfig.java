@@ -9,6 +9,8 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import reactor.core.publisher.Mono;
 
 /**
@@ -37,17 +39,21 @@ public class GlobalFilterConfig {
                 logger.info("进行授权认证操作...");
                 // 获取请求微服务的请求路径
                 String path = exchange.getRequest().getPath().toString();
+                // 获取请求微服务的请求方法
+                String httpMethod = exchange.getRequest().getMethod().toString();
                 // 获取请求头部的Token
                 String token = exchange.getRequest().getHeaders().getFirst("token");
+
                 if (token == null) {
-                    token = "";
+                    throw new ServiceException("未授权，无法访问！");
                 }
                 AuthorizeClient authorizeClient = AutowiredBean.getBean(AuthorizeClient.class);
                 /** 进行授权验证操作 */
-                boolean authResult = authorizeClient.isPermitted(path, token);
+                boolean authResult = authorizeClient.isPermitted(path, httpMethod, token);
                 if (!authResult) {
                     throw new ServiceException("未授权，无法访问！");
                 }
+
                 return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                     logger.info("授权认证通过");
                 }));

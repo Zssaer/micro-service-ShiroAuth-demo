@@ -18,13 +18,22 @@ spring:
             allowedMethods: "*"
 
       routes:
-        - id: login
+        - id: LoginApi
           uri: lb://micro-service-login-api  #网关路由到用户服务micro-service-login-api
           predicates:
-            - Path=/login-api/login       #输入条件为`服务网关地址/service`进行跳转
+            - Path=/login-api/login       #输入条件为`服务网关地址/login-api/login`进行跳转到micro-service-login-api的Login接口
           filters:
             - StripPrefix=1
             - IgnoreAuthFilter  #跳过授权认证，Filter在IgnoreAuthFilterFactor中命名
+
+        - id: LoginService
+          uri: lb://micro-service-login-api  #网关路由到用户服务micro-service-login-api
+          predicates:
+            - Path=/login-api/**
+          filters:
+            - StripPrefix=1
+
+
 
 
 server:

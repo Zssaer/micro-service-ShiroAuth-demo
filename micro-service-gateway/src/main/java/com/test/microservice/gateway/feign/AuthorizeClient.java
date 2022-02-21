@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "micro-service-auth")
 public interface AuthorizeClient {
     @GetMapping("/login/isPermitted")
-    boolean isPermitted(@RequestParam String requestURI, @RequestParam String token);
+    boolean isPermitted(@RequestParam String requestURI,@RequestParam String httpMethod, @RequestParam String token);
 }

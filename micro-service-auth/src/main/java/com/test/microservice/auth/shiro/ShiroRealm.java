@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -83,14 +84,16 @@ public class ShiroRealm extends AuthorizingRealm {
 
         //获取登录用户名
         LoginUserDTO loginUserDTO = (LoginUserDTO) principalCollection.getPrimaryPrincipal();
+
+        HashMap<String, List<String>> map =
+                shiroService.getRolesAndPermissions(loginUserDTO.getLoginName());
         //添加角色和权限
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         //添加拥有角色列表
-        simpleAuthorizationInfo.addRoles(shiroService.getRoles(loginUserDTO.getLoginName()));
-
+        simpleAuthorizationInfo.addRoles(map.get("roles"));
+        //添加拥有权限
+        simpleAuthorizationInfo.addStringPermissions(map.get("permissions"));
         session.setAttribute("simpleAuthorizationInfo", simpleAuthorizationInfo);
-        //添加拥有权限列表
-        //simpleAuthorizationInfo.addStringPermissions(shiroService.getPermissions(loginUserDTO.getUserName()));
         return simpleAuthorizationInfo;
     }
 

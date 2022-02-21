@@ -40,6 +40,14 @@ public class LoginController {
     }
 
     /**
+     * 获取登录信息
+     */
+    @GetMapping("/getLoginInfo")
+    public Result getLoginInfo() {
+        return authLoginClient.LoginInfo();
+    }
+
+    /**
      * 通过用户名查询用户
      * @param userName 用户名
      * @return

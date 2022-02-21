@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 /**
@@ -25,6 +26,7 @@ public class SessionManager  extends DefaultWebSessionManager {
 
     @Override
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
+        HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         //获取请求头，或者请求参数中的token
         String baseid = StringUtils.isEmpty(WebUtils.toHttp(request).getHeader(AUTHORIZATION))
                 ? request.getParameter(AUTHORIZATION) : WebUtils.toHttp(request).getHeader(AUTHORIZATION);
