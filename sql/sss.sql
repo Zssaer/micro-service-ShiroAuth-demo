@@ -11,11 +11,32 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 18/02/2022 18:03:04
+ Date: 21/02/2022 16:05:30
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for login_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `login_permission`;
+CREATE TABLE `login_permission`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `pid` int(0) NULL DEFAULT NULL COMMENT '父ID',
+  `name` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '权限名称',
+  `type` int(0) NOT NULL COMMENT '权限类型(1:菜单权限,2功能权限)',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '权限路径/权限值',
+  `method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '功能权限-请求类型',
+  `icon` varchar(90) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '菜单权限-菜单图标',
+  `sort` int(0) NULL DEFAULT NULL COMMENT '菜单权限-排名',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1024 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of login_permission
+-- ----------------------------
+INSERT INTO `login_permission` VALUES (101, NULL, '获取登录信息', 2, '/login/getLoginInfo', 'GET', '', 50);
 
 -- ----------------------------
 -- Table structure for login_role
@@ -54,5 +75,22 @@ CREATE TABLE `login_user`  (
 -- Records of login_user
 -- ----------------------------
 INSERT INTO `login_user` VALUES (1, 'admin', '87764f862dd62c59cff8e8d69d4d8b9a', '1', 'fCL5)4Jm', 1, '1', '2022-01-19 16:30:20', 1);
+
+-- ----------------------------
+-- Table structure for role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `role_permission`;
+CREATE TABLE `role_permission`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `role_id` int(0) NOT NULL COMMENT '角色ID',
+  `permission_id` int(0) NOT NULL COMMENT '权限ID',
+  `is_use` int(0) NOT NULL DEFAULT 1 COMMENT '可否使用权限 0:不能 1可以',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 108 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role_permission
+-- ----------------------------
+INSERT INTO `role_permission` VALUES (101, 1, 101, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

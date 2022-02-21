@@ -124,9 +124,7 @@ public class LoginController {
     @GetMapping("/LoginInfo")
     public Result LoginInfo() {
         LoginUserDTO info = shiroService.getLoginInfo();
-        Subject subject = SecurityUtils.getSubject();
-        LoginUserDTO userDTO = (LoginUserDTO) subject.getPrincipal();
-        return ResultBuilder.successResult(userDTO);
+        return ResultBuilder.successResult(info);
     }
 
 
