@@ -1,5 +1,9 @@
 package com.test.microservice.login.api.service.impl;
 
+import com.test.microservice.common.exception.ServiceException;
+import com.test.microservice.common.result.Result;
+import com.test.microservice.common.utils.SaltUtils;
+import com.test.microservice.login.api.controller.requst.RegisterReq;
 import com.test.microservice.login.api.mapper.LoginPermissionMapper;
 import com.test.microservice.login.api.mapper.LoginRoleMapper;
 import com.test.microservice.login.api.mapper.LoginUserMapper;
@@ -9,12 +13,13 @@ import com.test.microservice.login.api.model.LoginRole;
 import com.test.microservice.login.api.model.LoginUser;
 import com.test.microservice.login.api.model.RolePermission;
 import com.test.microservice.login.api.service.LoginSerivce;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,5 +94,40 @@ public class LoginServiceImpl implements LoginSerivce {
         map.put("permissions", loginPermissions);
         // 权限部分省略
         return map;
+    }
+
+    /**
+     * 注册用户
+     * @param req 注册请求类
+     */
+    @Override
+    public void register(RegisterReq req) {
+        // 检验登录名是否被注册
+        checkDuplicatLoginName(req.getLoginName());
+
+        LoginUser loginUser = new LoginUser();
+        BeanUtils.copyProperties(req, loginUser);
+        // 生成随机Salt
+        String salt = SaltUtils.getSalt(8);
+        // 明文密码进行MD5 + salt + hash散列1024次数
+        Md5Hash hash = new Md5Hash(req.getPasswd(), salt, 1024);
+        // 存储16进制化密码
+        loginUser.setLoginPasswd(hash.toHex());
+        loginUser.setSalt(salt);
+        loginUserMapper.insertSelective(loginUser);
+    }
+
+    /**
+     * 检验登录名是否被注册
+     *
+     * @param loginName 注册的登录名
+     */
+    private void checkDuplicatLoginName(String loginName) {
+        Example example = new Example(LoginUser.class);
+        example.createCriteria().andEqualTo("loginName", loginName);
+        List<LoginUser> loginUserList = loginUserMapper.selectByExample(example);
+        if (!loginUserList.isEmpty()) {
+            throw new ServiceException("该登录名已经存在了，请更改其他登录名。");
+        }
     }
 }
