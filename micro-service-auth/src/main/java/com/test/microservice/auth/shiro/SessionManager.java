@@ -28,7 +28,7 @@ public class SessionManager  extends DefaultWebSessionManager {
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         //获取请求头，或者请求参数中的token
-        String baseid = StringUtils.isEmpty(WebUtils.toHttp(request).getHeader(AUTHORIZATION))
+            String baseid = StringUtils.isEmpty(WebUtils.toHttp(request).getHeader(AUTHORIZATION))
                 ? request.getParameter(AUTHORIZATION) : WebUtils.toHttp(request).getHeader(AUTHORIZATION);
         // 如果请求头中有 Token 则其值为sessionId
 

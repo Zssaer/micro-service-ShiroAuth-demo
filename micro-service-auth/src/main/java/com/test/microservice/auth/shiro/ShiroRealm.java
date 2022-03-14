@@ -133,7 +133,7 @@ public class ShiroRealm extends AuthorizingRealm {
             temp = (LoginUserDTO) ((SimplePrincipalCollection) attribute).getPrimaryPrincipal();
             logger.info("当前已登录的用户user: " + temp.toString());
             //清除该用户以前登录时保存的session，强制退出
-            if (token.getUsername().equals(temp.getUserName())) {
+            if (token.getUsername().equals(temp.getLoginName())) {
                 sessionManager.getSessionDAO().delete(session);
             }
         }

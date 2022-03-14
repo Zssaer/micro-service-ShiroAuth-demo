@@ -30,8 +30,7 @@ spring:
           uri: lb://micro-service-login-api  #网关路由到用户服务micro-service-login-api
           predicates:
             - Path=/login-api/**
-          filters:
-            - StripPrefix=1
+
 
 
 
