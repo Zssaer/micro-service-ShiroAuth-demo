@@ -5,6 +5,8 @@ import com.test.microservice.common.result.ResultBuilder;
 import com.test.microservice.login.api.feign.AuthLoginClient;
 import com.test.microservice.login.api.model.LoginUser;
 import com.test.microservice.login.api.service.LoginSerivce;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +15,12 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
-
 /**
  * @description: 登录操作Api
  * @author: Zhaotianyi
  * @time: 2021/11/15 16:27
  */
+@Api(value = "登录模块",tags = {"登录模块"})
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -34,6 +35,7 @@ public class LoginController {
      * @param Pwd 密码
      * @return
      */
+    @ApiOperation("用户登录")
     @PostMapping
     public Result login(String user_name, String Pwd) {
         return authLoginClient.loginPCByPwd(user_name, Pwd);
@@ -42,6 +44,7 @@ public class LoginController {
     /**
      * 获取登录信息
      */
+    @ApiOperation(value = "获取当前登录信息",notes = "需要登录")
     @GetMapping("/getLoginInfo")
     public Result getLoginInfo() {
         return authLoginClient.LoginInfo();

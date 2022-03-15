@@ -5,6 +5,8 @@ import com.test.microservice.common.result.ResultBuilder;
 import com.test.microservice.common.utils.ValidateUtil;
 import com.test.microservice.login.api.controller.requst.RegisterReq;
 import com.test.microservice.login.api.service.LoginSerivce;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import static com.test.microservice.common.utils.ValidateUtil.REGEX_PASS_WORD;
  * @author: Zhaotianyi
  * @time: 2022/3/14 16:02
  */
+@Api(value = "注册操作",tags = {"注册操作"})
 @RequestMapping("/register")
 @RestController
 public class RegisterController {
@@ -32,6 +35,7 @@ public class RegisterController {
      * @param req 注册请求类
      * @return Result结果
      */
+    @ApiOperation("用户注册")
     @PostMapping
     public Result register(@RequestBody RegisterReq req) {
         if (ValidateUtil.isEmpty(req.getPasswd())) {

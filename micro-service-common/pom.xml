@@ -48,5 +48,11 @@
             <artifactId>commons-net</artifactId>
             <version>3.8.0</version>
         </dependency>
+
+        <!--Swagger2-->
+        <dependency>
+            <groupId>com.spring4all</groupId>
+            <artifactId>swagger-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 </project>
