@@ -2,7 +2,8 @@
 
 使用Shiro+Spring-Gateway+Nacos+Redis的微服务授权Demo案例。
 
-
+## What's new:
+新增 Swagger接口页面，地址为 网关地址/swagger-ui/index.html
 
 ## 主要使用技术栈：
 
@@ -12,6 +13,7 @@
 - Redis缓存存储
 - MyBatis+通用Mapper
 - Spring-Boot-Admin
+- Swagger3
 
 ## 授权步骤：
 
